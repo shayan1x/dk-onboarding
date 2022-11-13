@@ -1,0 +1,21 @@
+{
+    "pools": {
+        "A": {
+            "servers": [
+                "192.168.56.101:11211",
+                "192.168.56.102:11211",
+                "192.168.56.103:11211"
+            ]
+        }
+    },
+
+    "route": {
+        "type": "OperationSelectorRoute",
+        "operation_policies": {
+            "add": "AllSyncRoute|Pool|A",
+            "delete": "AllSyncRoute|Pool|A",
+            "get": "LatestRoute|Pool|A",
+            "set": "AllSyncRoute|Pool|A"
+        }
+    }
+}
