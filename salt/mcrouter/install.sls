@@ -1,4 +1,4 @@
-install_packages:
+install_mcrouter_requirements:
   pkg.installed:
     - pkgs:
       - libdouble-conversion3
