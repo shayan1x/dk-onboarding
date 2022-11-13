@@ -42,6 +42,16 @@ loadbalancers = [
 	}
 ]
 
+mcrouters = [
+	{
+		:box => "ubuntu/bionic64",
+		:hostname => "mc1",
+		:network_ip => "192.168.56.105",
+		:memory => 768,
+		:cpu => 1	
+	}
+]
+
 
 Vagrant.configure("2") do |config|
 	config.vm.define "master" do |master| 
@@ -88,6 +98,18 @@ Vagrant.configure("2") do |config|
 			wk.vm.provision "shell" do |shell|
 				shell.path = "scripts/salt.sh"
 				shell.args = ["minion", "#{worker[:hostname]}", "#{masterConfig[:network_ip]}"]
+			end
+		end		
+	end
+
+	mcrouters.each do |worker|
+		config.vm.define worker[:hostname] do |wk| 
+			wk.vm.box = worker[:box]
+			wk.vm.network "private_network", ip: worker[:network_ip]
+			wk.vm.hostname = worker[:hostname]
+			wk.vm.provider "virtualbox" do |v|
+				v.memory = worker[:memory]
+				v.cpus = worker[:cpu]
 			end
 		end		
 	end
