@@ -1,0 +1,38 @@
+{% set hostname = salt['grains.get']('host') %}
+{% set node = pillar['percona_cluster_workers'][hostname] %}
+
+[client]
+socket=/var/run/mysqld/mysqld.sock
+
+[mysqld]
+server-id=1
+datadir=/var/lib/mysql
+socket=/var/run/mysqld/mysqld.sock
+log-error=/var/log/mysql/error.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+binlog_expire_logs_seconds=604800
+
+wsrep_provider=/usr/lib/galera4/libgalera_smm.so
+
+wsrep_cluster_address=gcomm://{{ pillar['percona_cluster_workers'].values() | list | map(attribute = 'ip') | join(',') }}
+
+binlog_format=ROW
+
+wsrep_slave_threads={{ pillar['percona_common']['slave_threads'] }}
+
+wsrep_log_conflicts
+
+innodb_autoinc_lock_mode=2
+
+wsrep_node_address={{ node['ip'] }}
+
+wsrep_cluster_name={{ pillar['percona_common']['cluster_name'] }}
+
+wsrep_node_name={{ node['name'] }}
+
+pxc_strict_mode=ENFORCING
+
+wsrep_sst_method=xtrabackup-v2
+
+pxc-encrypt-cluster-traffic={{ 'ON' if pillar['percona_common']['encryption'] == True else 'OFF' }}
