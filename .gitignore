@@ -3,3 +3,4 @@ keys/minions/*/*.pem
 *.deb
 *.log
 certs/**
+*.tar.gz
