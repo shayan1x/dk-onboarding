@@ -3,7 +3,9 @@ base:
     - percona
     - redis
     - elk
+    - mcrouter
 
   'lb*':
     - percona
     - redis
+    - mcrouter
