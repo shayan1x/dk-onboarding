@@ -6,6 +6,7 @@ memcached:
     - source: salt://memcached/files/memcached.conf
     - require:
       - pkg: memcached
+    - template: jinja
 
 enable_memcached:
   service.running:
