@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/etc/mcrouter
-ExecStart=/opt/mcrouter/bin/mcrouter -p 5000 --config-file mcrouter.conf
+ExecStart=/usr/bin/mcrouter -p 5000 --config-file mcrouter.conf
 Restart=on-failure
 Type=simple
 KillMode=process
