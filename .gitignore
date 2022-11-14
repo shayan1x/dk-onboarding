@@ -1,5 +1,5 @@
 .vagrant/**
-keys/minions/*/*.pem
+keys/minions/*/*
 *.deb
 *.log
 certs/**
