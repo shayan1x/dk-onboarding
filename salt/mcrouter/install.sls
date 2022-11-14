@@ -35,6 +35,7 @@ install_mcrouter_requirements:
     - user: root
     - group: root
     - mode: 0644
+    - template: jinja
 
 /usr/lib/systemd/system/mcrouter.service:
   file.managed:
@@ -53,5 +54,7 @@ install_mcrouter_requirements:
 mcrouter:
   service.running:
     - enable: True
+    - full_restart: True
     - watch:
+      - file: /etc/mcrouter/mcrouter.conf
       - file: /usr/lib/systemd/system/mcrouter.service
