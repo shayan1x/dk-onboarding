@@ -8,6 +8,8 @@ ExecStart=/opt/mcrouter/bin/mcrouter -p 5000 --config-file mcrouter.conf
 Restart=on-failure
 Type=simple
 KillMode=process
+LimitNOFILE=16384
+LimitNPROC=infinity
 
 [Install]
 WantedBy=multi-user.target
