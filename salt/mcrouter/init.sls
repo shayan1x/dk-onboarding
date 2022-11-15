@@ -1,2 +1,2 @@
 include:
-  - mcrouter.install
+  - mcrouter.install_v2
