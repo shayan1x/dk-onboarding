@@ -6,3 +6,4 @@ install_packages:
       - lsb-release
       - curl  
       - python3-mysqldb
+    - refresh: True
