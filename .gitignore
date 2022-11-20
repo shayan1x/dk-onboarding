@@ -5,3 +5,4 @@ keys/minions/*/*
 certs/**
 *.tar.gz
 *.tar
+db_bak/**
