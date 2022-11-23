@@ -34,7 +34,7 @@ workers = [
 
 loadbalancers = [
 	{
-		:box => "ubuntu/focal64",
+		:box => "bento/debian-9",
 		:hostname => "lb1",
 		:network_ip => "192.168.56.104",
 		:memory => 512,
@@ -44,7 +44,7 @@ loadbalancers = [
 
 mcrouters = [
 	{
-		:box => "ubuntu/focal64",
+		:box => "bento/debian-9",
 		:hostname => "mc1",
 		:network_ip => "192.168.56.105",
 		:memory => 768,
