@@ -1,7 +1,7 @@
 install_mcrouter:
   pkg.installed:
     - sources: 
-      - mcrouter: salt://mcrouter/files/mcrouter-1.0.deb
+      - mcrouter: salt://mcrouter/files/mcrouter-0.38.deb
     - refresh: True
 
 /etc/mcrouter/mcrouter.conf:
