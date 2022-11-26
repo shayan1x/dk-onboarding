@@ -1,0 +1,3 @@
+CONFIG_FILE_PATH={{ pillar['mcrouter']['conf'] }}
+MCROUTER_PORT={{ pillar['mcrouter']['port'] }}
+LOG_FILE={{ pillar['mcrouter']['log'] }}

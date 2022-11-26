@@ -1,7 +1,15 @@
+/etc/default/mcrouter:
+  file.managed:
+    - source: salt://mcrouter/files/environment
+    - user: root
+    - group: root
+    - mode: 0644
+    - template: jinja
+
 install_mcrouter:
   pkg.installed:
     - sources: 
-      - mcrouter: salt://mcrouter/files/mcrouter-0.38.deb
+      - mcrouter: salt://mcrouter/files/mcrouter-0.38-new.deb
     - refresh: True
 
 /etc/mcrouter/mcrouter.conf:
@@ -20,3 +28,4 @@ mcrouter:
     - full_restart: True
     - watch:
       - file: /etc/mcrouter/mcrouter.conf
+      - file: /etc/default/mcrouter
