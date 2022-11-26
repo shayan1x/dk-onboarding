@@ -4,6 +4,7 @@ base:
     - redis
     - elk
     - mcrouter
+    - mysql
 
   'lb*':
     - percona
