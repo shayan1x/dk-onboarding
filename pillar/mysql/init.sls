@@ -59,7 +59,7 @@ commonConfig:
   innodb_buffer_pool_size: 1G
   sync_binlog: 1
   innodb_flush_log_at_trx_commit: 1
-  innodb_log_file_size: 2G
+  innodb_log_file_size: 1G
 
 
 slaveConfig:
