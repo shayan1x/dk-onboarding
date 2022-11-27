@@ -56,6 +56,9 @@ commonConfig:
   max_prepared_stmt_count: 500000
   binlog_cache_size: 1073741824
   expire_logs_days: 4
+  innodb_buffer_pool_size: 1G
+  sync_binlog: 1
+  innodb_flush_log_at_trx_commit: 1
 
 
 slaveConfig:
