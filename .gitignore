@@ -1,6 +1,7 @@
 .vagrant/**
 keys/minions/*/*
 *.deb
+*.pub
 *.log
 certs/**
 *.tar.gz
