@@ -4,6 +4,12 @@ copy_elastic_config_to_workers:
     - name: /etc/elasticsearch/elasticsearch.yml
     - template: jinja
 
+copy_elastic_jvm_to_workers:
+  file.managed:
+    - source: salt://elk/files/jvm.options
+    - name: /etc/elasticsearch/jvm.options.d/custom.options
+    - template: jinja
+
 copy_kibana_config_to_workers:
   file.managed:
     - source: salt://elk/files/kibana.yml
@@ -23,4 +29,5 @@ kibana:
     - restart: True
     - watch:
       - file: copy_kibana_config_to_workers
+      - file: copy_elastic_jvm_to_workers
   
