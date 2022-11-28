@@ -10,6 +10,15 @@ common:
   bind: 0.0.0.0
   backlog: 32768
   authPassword: a9a5061bfaabd7597fff569c41125073598a36d1de28d8065422b731f5956fd154c01c2aaf0e051c
+  timeout: 600
+  dbCount: 32
+  serveStalePolicy: yes
+  replicationTimeout: 30
+  replicationPingInterval: 5
+  replicationBacklogSize: 5mb
+  replicationMinToWrite: 1
+  replicationMaxLag: 3
+  maxConnections: 1000
 
 master:
   ip: 192.168.56.101
