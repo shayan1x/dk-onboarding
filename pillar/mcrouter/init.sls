@@ -1,6 +1,13 @@
 memcached:
   port: 10000
   bind: 0.0.0.0
+  threads: 4
+  user: memcache
+  memoryLimit: 256
+  connections: 500
+  logFile: /var/log/memcached.log
+  pidFile: /var/run/memcached/memcached.pid
+
 
 mcrouter:
   port: 5400
