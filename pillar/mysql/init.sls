@@ -58,8 +58,9 @@ commonConfig:
   expire_logs_days: 4
   innodb_buffer_pool_size: 1G
   sync_binlog: 1
-  innodb_flush_log_at_trx_commit: 1
-  innodb_log_file_size: 1G
+  innodb_flush_log_at_trx_commit: 2
+  innodb_log_file_size: 250M
+  innodb_sort_buffer_size: 1M
 
 
 slaveConfig:
