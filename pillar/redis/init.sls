@@ -1,8 +1,8 @@
 common:
   serverPort: 6379
   sentinelPort: 26379
-  downAfterMs: 30000
-  failoverTimeout: 65000
+  downAfterMs: 3000
+  failoverTimeout: 12000
   masterName: mymaster
   parallelSyncs: 1
   quorum: 2
@@ -12,13 +12,14 @@ common:
   authPassword: a9a5061bfaabd7597fff569c41125073598a36d1de28d8065422b731f5956fd154c01c2aaf0e051c
   timeout: 600
   dbCount: 32
-  serveStalePolicy: yes
+  serveStalePolicy: 'yes'
   replicationTimeout: 30
   replicationPingInterval: 5
   replicationBacklogSize: 5mb
   replicationMinToWrite: 1
   replicationMaxLag: 3
-  maxConnections: 1000
+  maxConnections: 500
+  appendOnly: 'yes'
 
 master:
   ip: 192.168.56.101
