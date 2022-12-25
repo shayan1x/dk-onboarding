@@ -6,7 +6,7 @@ common:
   masterName: mymaster
   parallelSyncs: 1
   quorum: 2
-  protectedMode: False
+  protectedMode: True
   bind: 0.0.0.0
   backlog: 32768
   authPassword: a9a5061bfaabd7597fff569c41125073598a36d1de28d8065422b731f5956fd154c01c2aaf0e051c
@@ -20,6 +20,7 @@ common:
   replicationMaxLag: 3
   maxConnections: 500
   appendOnly: 'yes'
+  securePassword: J6EOUUNRYv0lEZsG4yP0M4XH1
 
 master:
   ip: 192.168.56.101
