@@ -17,7 +17,7 @@ common:
   replicationPingInterval: 5
   replicationBacklogSize: 5mb
   replicationMinToWrite: 1
-  replicationMaxLag: 3
+  replicationMaxLag: 5
   maxConnections: 500
   appendOnly: 'yes'
   securePassword: J6EOUUNRYv0lEZsG4yP0M4XH1
