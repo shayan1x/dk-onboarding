@@ -23,9 +23,43 @@ common:
   securePassword: J6EOUUNRYv0lEZsG4yP0M4XH1
 
 
+sentinel:
+  bindAddress: 0.0.0.0
+  bindPort: 26379
+  protectedMode: True
+  daemonize: True
+  pidFile: /var/run/sentinel/redis-sentinel.pid
+  logFile: /var/log/redis/redis-sentinel.log
+  dir: /var/lib/redis
+
+security:
+  enabled: True
+  protectedMode: True
+
+connection:
+  bindAddress: 0.0.0.0
+  bindPort: 6379
+  tcpBacklog: 1024
+  tcpKeepalive: 300
+  maxClient: 1024
+  timeout: 0
+
+database:
+  count: 32
+
+process:
+  daemonize: True
+  supervised: systemd
+  pidfile: /var/run/redis/redis-server.pid
+
 authentication:
   enabled: True
   securePassword: J6EOUUNRYv0lEZsG4yP0M4XH1
+
+logging:
+  enabled: True
+  level: notice
+  file: /var/log/redis/redis-server.log
 
 persistence:
   enabled: True
@@ -63,8 +97,14 @@ replication:
   priority: 100
 
 consistency:
+  enabled: True
   minReplicasToWrite: 1
   minReplicasMaxLag: 5
+
+refresh:
+  enabled: True
+  hz: 10
+  isDynamic: True
 
 master:
   ip: 192.168.56.101
