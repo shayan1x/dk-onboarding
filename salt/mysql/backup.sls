@@ -1,8 +1,3 @@
-lock_tables:
-  mysql_query.run:
-    - database: mysql
-    - query: 'FLUSH TABLES WITH READ LOCK'
-
 delete_backup_dir:
   file.directory:
     - name: {{ pillar['xtrabackup']['backup_dir'] }}
@@ -17,12 +12,6 @@ create_backup:
 prepare_backup:
   cmd.run:
     - name: xtrabackup --prepare --target-dir {{ pillar['xtrabackup']['backup_dir'] }}
-
-unlock_tables:
-  mysql_query.run:
-    - database: mysql
-    - query: 'UNLOCK TABLES'
-
 
 delete_old_backup:
   file.directory:
