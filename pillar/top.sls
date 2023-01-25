@@ -5,6 +5,7 @@ base:
     - elk
     - mcrouter
     - mysql
+    - nspawn
 
   'lb*':
     - percona

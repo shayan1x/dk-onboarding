@@ -1,6 +1,7 @@
 base:
   '*':
     - prerequisite
+    - nspawn
   
   'worker1':
     - percona
