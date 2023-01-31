@@ -2,22 +2,21 @@ vm.overcommit_memory:
   sysctl.present:
     - value: 1
 
-
-disable_hugepages:
-  file.line:
-    - name: /etc/sysfs.conf
-    - content: kernel/mm/transparent_hugepage/enabled = never
-    - match: kernel/mm/transparent_hugepage/enabled
-    - mode: insert
-    - location: end
+/etc/sysfs.d/disable_hugepages.conf:
+  file.managed:
+    - contents: |
+        kernel/mm/transparent_hugepage/enabled = never
+    - create: True
+    - user: root
+    - group: root
+    - mode: 0640
 
 sysfsutils:
   service.running:
     - restart: True
     - enable: True
     - watch:
-      - file: disable_hugepages
-
+      - file: /etc/sysfs.d/disable_hugepages.conf
 
 net.core.somaxconn:
   sysctl.present:
