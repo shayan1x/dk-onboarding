@@ -1,5 +1,12 @@
 memcached:
-  pkg.installed
+  pkg:
+    - installed
+
+  service.running:
+    - name: memcached
+    - enable: True
+    - watch:
+      - file: /etc/memcached.conf
 
 /etc/memcached.conf:
   file.managed:
@@ -7,10 +14,3 @@ memcached:
     - require:
       - pkg: memcached
     - template: jinja
-
-enable_memcached:
-  service.running:
-    - name: memcached
-    - enable: True
-    - watch:
-      - file: /etc/memcached.conf
