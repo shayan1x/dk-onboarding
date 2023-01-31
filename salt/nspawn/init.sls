@@ -1,2 +1,3 @@
-includes:
+include:
     - nspawn.install
+    - nspawn.configure

@@ -1,0 +1,7 @@
+[Network]
+{% for item in pillar['network_configurations'] %}
+{{ item }}
+{% endfor %}
+
+[Exec]
+NotifyReady=yes
