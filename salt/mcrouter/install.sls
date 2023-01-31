@@ -47,14 +47,11 @@ install_mcrouter_requirements:
 
 'systemctl -q daemon-reload':
   cmd.run:
-    - watch:
+    - onchanges:
       - file: /usr/lib/systemd/system/mcrouter.service
-
 
 mcrouter:
   service.running:
     - enable: True
-    - full_restart: True
     - watch:
       - file: /etc/mcrouter/mcrouter.conf
-      - file: /usr/lib/systemd/system/mcrouter.service
