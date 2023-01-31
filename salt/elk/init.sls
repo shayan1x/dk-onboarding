@@ -1,3 +1,3 @@
 include:
-  - elk.install
-  - elk.config
+  - elk.elasticsearch
+  - elk.kibana
