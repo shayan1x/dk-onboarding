@@ -1,7 +1,6 @@
 base:
   '*':
     - prerequisite
-    - nspawn
   
   'worker1':
     - percona
@@ -9,6 +8,7 @@ base:
     - redis
     # - elk
     - memcached
+    - nspawn
 
   'worker[2-9]':
     - match: pcre
@@ -16,7 +16,9 @@ base:
     - redis
     # - elk
     - memcached
+    - nspawn
 
   'lb*':
+    - keepalived
     - haproxy
     - mcrouter
