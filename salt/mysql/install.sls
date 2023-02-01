@@ -15,6 +15,5 @@ install_percona_server:
 mysql:
   service.running:
     - enable: True
-    - full_restart: True
     - require:
       - pkg: install_percona_server

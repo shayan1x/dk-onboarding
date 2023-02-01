@@ -1,4 +1,4 @@
 include:
     - mysql.install
-    - mysql.grants
     - mysql.config
+    - mysql.backup_v2
