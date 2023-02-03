@@ -1,6 +1,6 @@
 {% set conn = pillar['connection']  %}
 
-{% for user in pillar['users_v2'] %}
+{% for user in pillar['users'] %}
 {{ user['name'] }}_user:
   {% if user['enable'] == True %}
   mysql_user.present:
