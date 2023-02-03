@@ -4,30 +4,35 @@ users:
     enable: True
     pass: 1234
     role: replication
-    grants:
-      - database: '*.*'
-        grant: replication slave
-        grants: False
-        name: replication_slave_grants
 
-  - name: root
+  - name: 'root'
     host: '%'
     enable: True
     pass: 123456
     role: normal
-    grants:
-      - database: '*.*'
-        grant: all privileges
-        grants: True
-        name: root_full_grants
 
-  - name: majid
+  - name: 'majid'
     host: '%'
     enable: True
     pass: 1234
     role: normal
+
+roles:
+  - users:
+      - {"name": "replication", "host": "%", "enable": False }
     grants:
       - database: '*.*'
+        name: replication_slave_grants
+        grant: 'replication slave'
+        enable: True
+        grant_option: False
+
+  - users:
+      - {"name": "root", "host": "%", "enable": True }
+      - {"name": "majid", "host": "%", "enable": True }
+    grants:
+      - database: '*.*'
+        name: access_full_grants
         grant: all privileges
-        grants: True
-        name: root_full_grants
+        enable: True
+        grant_option: True
