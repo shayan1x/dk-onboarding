@@ -7,6 +7,6 @@
         - clean: True
     
     cmd.run:
-        - name: xtrabackup --backup --target-dir {{ backup_dir }}: --binlog-info=ON
-        - onchanges:
+        - name: xtrabackup --backup --target-dir {{ backup_dir }} --binlog-info=ON
+        - require:
             - file: {{ backup_dir }}

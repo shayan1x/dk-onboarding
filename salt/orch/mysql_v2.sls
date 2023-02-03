@@ -8,21 +8,16 @@ setup_cluster_master:
     salt.state:
         - tgt: worker1
         - sls:
-            - mysql
-            - mysql.grants
-
+            - mysql.roles.master
 
 setup_cluster_intermediate:
     salt.state:
         - tgt: worker2
         - sls:
-            - mysql
-            - mysql.restore
-
+            - mysql.roles.intermediate
 
 setup_cluster_slaves:
     salt.state:
         - tgt: worker3
         - sls:
-            - mysql
-            - mysql.restore
+            - mysql.roles.slave
