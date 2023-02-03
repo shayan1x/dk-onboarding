@@ -7,3 +7,4 @@ certs/**
 *.tar.gz
 *.tar
 db_bak/**
+gpgkeys/**
