@@ -1,6 +1,9 @@
 {% set firewall_rules = pillar['firewall_rules'] %}
 {% set firewall_policies = pillar['firewall_policies'] %}
 
+iptables-persistent:
+    pkg.installed
+
 {% for rule in firewall_rules %}
 firewall_rule_{{ loop.index }}:
     iptables.append:
