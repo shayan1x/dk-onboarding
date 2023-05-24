@@ -1,4 +1,5 @@
 {% set conn = pillar['connection']  %}
+{% set mysql_auth = pillar['mysql_auth'] %}
 
 {% for user in pillar['users'] %}
 {{ user['name'] }}_user:
@@ -10,10 +11,11 @@
     - name: "{{ user['name'] }}"
     - host: "{{ user['host'] }}"
     - password: "{{ user['pass'] }}"
-    - connection_host: {{ conn['host'] }}
-    - connection_user: {{ conn['user'] }}
-    - connection_pass: {{ conn['pass'] }}
-    - connection_port: {{ conn['port'] }}
+    - connection_host: "127.0.0.1"
+    - connection_user: root
+    - connection_pass: "{{ mysql_auth['root_password'] }}"
+    - connection_db: mysql
+    - auth_plugin: mysql_native_password
 
 {% endfor %}
 
@@ -34,8 +36,11 @@ set_roles_{{ grant['name'] }}_user_{{ user['name'] }}_{{ loop.index }}:
     - name: "{{ grant['name'] }}"
     - grant: "{{ grant['grant'] }}"
     - database: "{{ grant['database'] }}"
-    - user: "`{{ user['name'] }}`"
-    - host: "`{{ user['host'] }}`"
+    - user: "{{ user['name'] }}"
+    - host: "{{ user['host'] }}"
+    - connection_host: "127.0.0.1"
+    - connection_user: root
+    - connection_pass: "{{ mysql_auth['root_password'] }}"
 
 {% endfor %}
 {% endfor %}
