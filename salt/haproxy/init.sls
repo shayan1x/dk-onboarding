@@ -1,4 +1,4 @@
 include:
-  - haproxy.tune
+#  - haproxy.tune
   - haproxy.install
   - haproxy.config
