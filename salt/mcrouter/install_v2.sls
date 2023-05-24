@@ -1,3 +1,22 @@
+install_dependencies:
+  pkg.installed:
+    - pkgs:
+      - libdouble-conversion-dev
+      - libjemalloc-dev
+      - libgflags-dev
+      - libgoogle-glog-dev
+      - libboost1.62-all-dev
+      - libevent-dev
+      - libgflags-dev
+      - liblz4-dev
+      - liblzma-dev
+      - libsnappy-dev
+      - libsodium-dev
+      - libssl1.0-dev
+      - libtool
+      - libunwind8-dev
+      - zlib1g-dev
+
 install_mcrouter:
   pkg.installed:
     - sources: 
