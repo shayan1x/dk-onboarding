@@ -1,6 +1,3 @@
-{% set nodes = pillar['nodes'] %}
-{% set hosts = nodes | map(attribute = 'ip') %}
-
 server.port: {{ pillar['kibana']['port'] }}
 
 server.host: 0.0.0.0
@@ -9,4 +6,4 @@ server.maxPayload: {{ pillar['kibana']['maxPayload'] }}
 
 server.name: {{ pillar['kibana']['serverName'] }}
 
-elasticsearch.hosts: {{ ["http://"] | product(hosts) | map('join') | product([":9200"]) | map('join') | list }}
+elasticsearch.hosts: ["http://192.168.56.101:9200", "http://192.168.56.102:9200", "http://192.168.56.103:9200"]

@@ -1,5 +1,5 @@
 {% set hostname = grains['host'] %}
-{% set nodes = pillar['nodes'] %}
+{% set nodes = pillar['elk_nodes'] %}
 {% set node = nodes | selectattr('hostname', 'equalto', hostname) | list | first %}
 
 cluster.name: {{ pillar['cluster']['name'] }}
@@ -16,4 +16,4 @@ http.port: {{ pillar['cluster']['port'] }}
 
 discovery.seed_hosts: ["192.168.56.101", "192.168.56.102", "192.168.56.103"]
 
-cluster.initial_master_nodes: ["192.168.56.101"]
+cluster.initial_master_nodes: ["192.168.56.101", "192.168.56.102", "192.168.56.103"]

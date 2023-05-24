@@ -1,2 +1,2 @@
--Xms512m
--Xmx512m
+-Xms{{ pillar['jvm']['minHeapSize'] }}
+-Xmx{{ pillar['jvm']['maxHeapSize'] }}
