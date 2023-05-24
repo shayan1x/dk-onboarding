@@ -1,4 +1,4 @@
-/etc/elasticsearch/jvm.options.d/custom.options:
+/etc/elasticsearch/jvm.options:
   file.managed:
     - source: salt://elk/files/jvm.options
     - template: jinja
@@ -14,5 +14,5 @@
     - name: elasticsearch
     - watch:
       - file: /etc/elasticsearch/elasticsearch.yml
-      - file: /etc/elasticsearch/jvm.options.d/custom.options
+      - file: /etc/elasticsearch/jvm.options
   
