@@ -1,0 +1,18 @@
+{%- set nspawn_config = pillar['nspawn_common_config'] -%}
+{%- set network_config = nspawn_config['network'] -%}
+{%- set exec_config = nspawn_config['exec'] -%}
+{%- set files_config = nspawn_config['files'] -%}
+[Network]
+{%- for config in network_config %}
+{{ config }}
+{%- endfor %}
+
+[Exec]
+{%- for config in exec_config %}
+{{ config }}
+{%- endfor %}
+
+[Files]
+{% for config in files_config %}
+{{ config }}
+{%- endfor %}
