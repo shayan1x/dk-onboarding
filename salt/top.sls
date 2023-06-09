@@ -1,24 +1,22 @@
 base:
   '*':
     - prerequisite
+    - common
   
   'worker1':
     - percona
     - percona.create_user
-    - redis
     # - elk
     - memcached
     - nspawn
+    - lvm.lvm
 
   'worker[2-9]':
-    - match: pcre
     - percona
-    - redis
     # - elk
     - memcached
     - nspawn
+    - lvm.lvm
 
-  'lb*':
-    - keepalived
-    - haproxy
-    - mcrouter
+  'worker*-mysql':
+    - mysql
