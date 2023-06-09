@@ -11,35 +11,80 @@ workers = [
 		:box => "ubuntu/focal64",
 		:hostname => "worker1",
 		:network_ip => "192.168.56.101",
-		:memory => 3000,
-		:cpu => 2	
+		:memory => 3200,
+		:cpu => 2,
+		:disks => [
+			{
+				:name => "worker1_additional_nspawn",
+				:size => "15GB",
+			}
+		]
 	},
 
 	{
 		:box => "ubuntu/focal64",
 		:hostname => "worker2",
 		:network_ip => "192.168.56.102",
-		:memory => 3000,
-		:cpu => 2
+		:memory => 3200,
+		:cpu => 2,
+		:disks => [
+			{
+				:name => "worker2_additional_nspawn",
+				:size => "15GB"
+			}
+		]
 	},
 
 	{
 		:box => "ubuntu/focal64",
 		:hostname => "worker3",
 		:network_ip => "192.168.56.103",
-		:memory => 3000,
-		:cpu => 2
+		:memory => 3200,
+		:cpu => 2,
+		:disks => [
+			{
+				:name => "worker3_additional_nspawn",
+				:size => "15GB"
+			}
+		]
 	}
 ]
 
 loadbalancers = [
-	{
-		:box => "bento/debian-9",
-		:hostname => "lb1",
-		:network_ip => "192.168.56.104",
-		:memory => 512,
-		:cpu => 1	
-	}
+#	{
+#		:box => "bento/debian-9",
+#		:hostname => "lb1",
+#		:network_ip => "192.168.56.104",
+#		:memory => 512,
+#		:cpu => 1,
+#		:disks => [
+#			{
+#				:name => "lb1_additional_disk",
+#				:size => "5GB"
+#			},
+#			{
+#				:name => "lb1_additional_nspawn",
+#				:size => "25GB"
+#			}
+#		]
+#	},
+#	{
+#		:box => "bento/debian-9",
+#		:hostname => "lb2",
+#		:network_ip => "192.168.56.105",
+#		:memory => 512,
+#		:cpu => 1,
+#		:disks => [
+#			{
+#				:name => "lb1_additional_disk",
+#				:size => "25GB"
+#			},
+#			{
+#				:name => "lb1_additional_nspawn",
+#				:size => "25GB"
+#			}
+#		]
+#	}
 ]
 
 mcrouters = [
@@ -67,6 +112,7 @@ Vagrant.configure("2") do |config|
 			shell.path = "scripts/salt.sh"
 			shell.args = ["master"]
 		end
+		master.vm.synced_folder "./gpgkeys", "/etc/salt/gpgkeys", owner: "salt", group: "salt", type: "rsync"
 		end
 	end
 
@@ -75,6 +121,9 @@ Vagrant.configure("2") do |config|
 			wk.vm.box = worker[:box]
 			wk.vm.network "private_network", ip: worker[:network_ip]
 			wk.vm.hostname = worker[:hostname]
+			worker[:disks].each do |disk|
+				wk.vm.disk :disk, size: "#{disk[:size]}", name: "#{disk[:name]}"
+			end
 			wk.vm.provider "virtualbox" do |v|
 				v.memory = worker[:memory]
 				v.cpus = worker[:cpu]
@@ -91,6 +140,9 @@ Vagrant.configure("2") do |config|
 			wk.vm.box = worker[:box]
 			wk.vm.network "private_network", ip: worker[:network_ip]
 			wk.vm.hostname = worker[:hostname]
+			worker[:disks].each do |disk|
+				wk.vm.disk :disk, size: "#{disk[:size]}", name: "#{disk[:name]}"
+			end
 			wk.vm.provider "virtualbox" do |v|
 				v.memory = worker[:memory]
 				v.cpus = worker[:cpu]
@@ -98,18 +150,6 @@ Vagrant.configure("2") do |config|
 			wk.vm.provision "shell" do |shell|
 				shell.path = "scripts/salt.sh"
 				shell.args = ["minion", "#{worker[:hostname]}", "#{masterConfig[:network_ip]}"]
-			end
-		end		
-	end
-
-	mcrouters.each do |worker|
-		config.vm.define worker[:hostname] do |wk| 
-			wk.vm.box = worker[:box]
-			wk.vm.network "private_network", ip: worker[:network_ip]
-			wk.vm.hostname = worker[:hostname]
-			wk.vm.provider "virtualbox" do |v|
-				v.memory = worker[:memory]
-				v.cpus = worker[:cpu]
 			end
 		end		
 	end
