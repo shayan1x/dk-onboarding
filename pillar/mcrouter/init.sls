@@ -14,7 +14,7 @@ mcrouter:
   log: /dev/null
   conf: file:/etc/mcrouter/mcrouter.conf
 
-nodes:
+memcached_nodes:
   - 192.168.56.101:10000
   - 192.168.56.102:10000
   - 192.168.56.103:10000

@@ -8,18 +8,22 @@ kibana:
   maxPayload: 1048576
   serverName: myserver
 
-nodes:
-  - name: worker1
-    hostname: worker1
+jvm:
+  minHeapSize: 256m
+  maxHeapSize: 256m
+
+elk_nodes:
+  - name: worker1-elasticsearch
+    hostname: worker1-elasticsearch
     ip: 192.168.56.101
     isMaster: True
 
-  - name: worker2
-    hostname: worker2
+  - name: worker2-elasticsearch
+    hostname: worker2-elasticsearch
     ip: 192.168.56.102
     isMaster: False
 
-  - name: worker3
-    hostname: worker3
+  - name: worker3-elasticsearch
+    hostname: worker3-elasticsearch
     ip: 192.168.56.103
     isMaster: False

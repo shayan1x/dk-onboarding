@@ -1,5 +1,24 @@
 #!jinja|yaml|gpg
-users:
+
+mysql_auth:
+  root_password: |
+    -----BEGIN PGP MESSAGE-----
+    hQGMA0grNKYaOe2IAQv/dUJ7/2zD6Q7fHaK/a3z8GP5Z3762CZlaNW2Uv6qnpvaz
+    hJbfAD8DkZABZRyAgU89/ysRaxVVKfl7gB4LZLWhTdXy4lGRFPCzh62MdSsP7ybr
+    JwTFbHDgl03at5XkJNyHk8ALjcwD++rVJcozDYA7dbjPoGqshAYDRoCDkrzXqZS0
+    He6M/UEBRUpTJ1HfP+6FMxw2gztq0R98Ft3ULduEQzJe4SpErPZxwmY+/0y9vMC0
+    f5K0Cdc82Eru3ndaJBnbtmuL+BMB3hJAaYi+yUN3gbrckJE/DPy7CCV5sdVDjmAg
+    mQC0rlrL58lvA0u/IB4BzwvwhBZK6bnCz2HEzppPecR5bPF4+GRUKvCmT40slwVg
+    1Oxsrh5+PwDg/vJtf9xa6wcaPnUziTD7PAIKqyxWyc1UQmc/QPqokrBhYzyb8J9D
+    Y784v+xtjJLpHzzI3gLWvzfr48fdxMDQ1SmCAY0NbmqvUWgSySzG2zlSg4mMK3Oz
+    ynoePGMdMSrDDTgl8uPF0kEB7kkY1tB7zumwMyo2iIMLq+cF6imgmIhYpaUrdpdC
+    Q91AseyvoxiA2Ozzl9Gnwe+eVq+CSYT6k9ro65S2UFlBtQ==
+    =qIqv
+    -----END PGP MESSAGE-----
+  root_auth_plugin: mysql_native_password
+
+
+mysql_users:
   - name: 'replication'
     host: '%'
     enable: True
@@ -19,26 +38,6 @@ users:
       =ydSL
       -----END PGP MESSAGE-----
     role: replication
-
-  - name: 'root'
-    host: '%'
-    enable: True
-    pass: |
-      -----BEGIN PGP MESSAGE-----
-
-      hQGLA0grNKYaOe2IAQv2JCLsGV76cBAGiWOxzMhNwZHVNb8yl1pP5odbDh+ZgrvA
-      YQ9DHvzG5SQFK62gKRbGe5GpOKeyyFWADp4d/2MZWWbxQkJvsZsICDXhCXGp42W5
-      DzkS1bCd9XzN9Jy6Zn9X71dMGGkVSRWeUiEls8k/p77beHnGu1PDJFqiqSrLztKf
-      L+1IiV/B8yFyQsR56x2NlzfniSaDKhGUAyEpZj3OibKX0In/WCRFE+X2u3UGzMn6
-      PG2c34NucONHXEy1q9A0mpHyKwpSC9H+cEU5xQQN6enLFtKiSuuhz7btecHFyV+7
-      SSoHsHXcaZM1ttqSAw9/g7hfIpHTx9Ae2yLMOl37qw7n0q/QrplgiePvXTR0Lqlj
-      3noFTNFLkpCBq9iwYgUpR7cYL/aUxOLrHAlUEVA9NYTK1sZkmzdeOLvx95GU4/yf
-      s9NVqMby+aPxh5xGtaUL/aoy+rqq2f95asjmH0sje1AKnFSjhTfEERf3KWWmhd5c
-      klVQ7KaqV0i6B/Wh3ELSQgE1k+TKILi82RyqJ0qkEKrKwe//oX1anDolkCa6XeUj
-      dCZGBUpt5+S682YhHnADxS7dg1FQmIMOFpvjGoHB6ojqHg==
-      =HbRe
-      -----END PGP MESSAGE-----
-    role: normal
 
   - name: 'shayan'
     host: '%'
@@ -60,9 +59,9 @@ users:
       -----END PGP MESSAGE-----
     role: normal
 
-roles:
+mysql_roles:
   - users:
-      - {"name": "replication", "host": "%", "enable": False }
+      - {"name": "replication", "host": "%", "enable": True }
     grants:
       - database: '*.*'
         name: replication_slave_grants
@@ -71,11 +70,10 @@ roles:
         grant_option: False
 
   - users:
-      - {"name": "root", "host": "%", "enable": True }
-      - {"name": "majid", "host": "%", "enable": True }
+      - {"name": "shayan", "host": "%", "enable": True }
     grants:
       - database: '*.*'
         name: access_full_grants
-        grant: all privileges
+        grant: SELECT,UPDATE,DELETE,INSERT
         enable: True
-        grant_option: True
+        grant_option: False
