@@ -1,5 +1,5 @@
-install_memcached:
-  salt.state:
-    - tgt: worker*
-    - sls:
-      - memcached
+deploy_memcached:
+    salt.state:
+        - tgt: worker*-memcached
+        - sls:
+            - memcached

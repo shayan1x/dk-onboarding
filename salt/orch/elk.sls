@@ -1,5 +1,5 @@
-install_elasticsearch:
-  salt.state:
-    - tgt: 'worker*'
-    - sls:
-      - elk
+deploy_elk:
+    salt.state:
+        - tgt: worker*-elasticsearch
+        - sls:
+            - elk

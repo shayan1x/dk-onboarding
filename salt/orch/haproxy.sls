@@ -1,5 +1,5 @@
-install_loadbalancer:
-  salt.state:
-    - tgt: lb1
-    - sls:
-      - haproxy
+deploy_haproxy:
+    salt.state:
+        - tgt: worker*-haproxy
+        - sls:
+            - haproxy

@@ -1,5 +1,5 @@
-install_mcrouter:
-  salt.state:
-    - tgt: lb*
-    - sls:
-      - mcrouter
+deploy_mcrouter:
+    salt.state:
+        - tgt: worker*-mcrouter
+        - sls:
+            - mcrouter
