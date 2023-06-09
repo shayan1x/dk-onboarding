@@ -11,6 +11,7 @@ install_python_packages:
       - python-mysqldb
       - python-pymysql
       - debconf-utils
+      - openssh-client
 
 download_repo:
   file.managed:
@@ -49,13 +50,21 @@ debconf_auth_config:
 
 install_percona_server:
   pkg.installed:
-    - pkgs: {{ pillar['packages'] }}
+    - pkgs: {{ pillar['mysql_packages'] }}
     - require:
       - cmd: enable_repo
     - refresh: True
 
+/etc/mysql/conf.d/mysqld.cnf:
+  file.managed:
+    - source: salt://mysql/files/mysqld.cnf.j2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: "0644"
+
 mysql:
   service.running:
-    - enable: True
-    - watch:
-      - pkg: install_percona_server
+    - enable: true
+    - watch: 
+      - file: /etc/mysql/conf.d/mysqld.cnf

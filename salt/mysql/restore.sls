@@ -1,77 +1,93 @@
-{% set nodes = pillar['nodes_v2']  %}
-{% set replication_user = pillar['users'] | selectattr('role', '==', 'replication') | first %}
-{% set node = nodes | selectattr('name', '==', grains['host']) | first %}
-{% set role = node['role'] %}
-{% set restore_role = 'master' if role == 'intermediate' else ('intermediate' if role == "slave" else None) %}
+{% set restore_config = pillar['restore_config'] %}
+{% set replication_config = pillar['restore_config'] %}
+{% set ssh_path = "/root/.ssh/mysql-backup" %}
 
-{% if restore_role != None %}
-{% set restore_node = nodes | selectattr('role', '==', restore_role) | first %}
-{% set restore_node_name = restore_node['name'] %}
-{% set restore_node_host = restore_node['host'] %}
-{% set backup_dir = pillar['xtrabackup']['backup_dir'] %}
-{% set restore_dir = pillar['xtrabackup']['restore_dir'] %}
-rsync_backup:
-    cmd.run:
-        - name: rsync -a root@{{ restore_node_host }}:{{ backup_dir }} {{ restore_dir }}
-        - shell: /bin/bash
+{% if restore_config['enabled'] %}
 
-prepare_backup:
+stop_mysql:
+    service.dead:
+        - name: mysql
+        - enable: True
+
+/root/.ssh:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: "0700"
+
+{{ ssh_path }}:
+  file.managed:
+    - contents_pillar: restore_config:rsync_key
+    - user: root
+    - group: root
+    - mode: "0400"
+    - require:
+        - file: /root/.ssh
+
+{{  restore_config['local_directory'] }}:
+    file.directory:
+        - user: root
+        - group: root
+
+{% set rsync_user = restore_config['rsync_user'] %}
+{% set rsync_host = restore_config['rsync_host'] %}
+{% set rsync_dir = restore_config['directory'] %}
+{% set backup_dir = restore_config['local_directory'] %}
+{% set root_pwd = pillar['mysql_auth']['root_password'] %}
+
+remove_local_directory:
+   file.directory:
+      - name: {{ backup_dir }}
+      - clean: True
+
+rsync_from_parent:
     cmd.run:
-        - name: xtrabackup --prepare --target-dir {{ restore_dir }}
+        - name: "rsync -a --rsh 'ssh -o StrictHostKeyChecking=no -i {{ ssh_path }}' {{ rsync_user }}@{{ rsync_host }}:{{ rsync_dir }}/ {{ backup_dir }}"
+
+xtrabackup_prepare:
+    cmd.run:
+        - name: "xtrabackup --prepare -p{{ root_pwd }} --target-dir {{ backup_dir }}"
         - onchanges:
-            - cmd: rsync_backup
+            - cmd: rsync_from_parent
 
-/var/lib/mysql:
-    file.directory:
-        - clean: True
+remove_mysql_data:
+   file.directory:
+      - name: /var/lib/mysql/     
+      - clean: True
+      - onchanges: 
+        - cmd: xtrabackup_prepare
 
-copy_backup_to_mysql:
+xtrabackup_copy_back:
     cmd.run:
-        - name: xtrabackup --move-back --target-dir {{ restore_dir }}
-        - require:
-            - file: /var/lib/mysql
+        - name: "xtrabackup --copy-back --target-dir {{ backup_dir }} --datadir /var/lib/mysql"
+        - onchanges: 
+            - cmd: xtrabackup_prepare
 
-chown_mysql_dir:
-    file.directory:
-        - name: /var/lib/mysql/
-        - user: mysql
-        - group: mysql
-        - file_mode: 0640
-        - dir_mode: 0750
-        - recurse:
-            - user
-            - group
+chown_mysql_data:
+    cmd.run:
+        - name: "chown -R mysql:mysql /var/lib/mysql"
 
-restart_mysql:
+start_mysql:
     service.running:
         - name: mysql
-        - watch: 
-            - cmd: copy_backup_to_mysql
-            - file: chown_mysql_dir
-
-start_slave:
-    cmd.run:
-        - name: |
-            BINLOG_FILE=$(cat /var/lib/mysql/xtrabackup_binlog_pos_innodb | awk '{ print $1 }')
-            BINLOG_POS=$(cat /var/lib/mysql/xtrabackup_binlog_pos_innodb | awk '{ print $2 }')
-
-            QUERY=`cat <<EOF
-                CHANGE MASTER TO
-                    MASTER_HOST = "{{ restore_node_host }}",
-                    MASTER_USER = "{{ replication_user['name'] }}",
-                    MASTER_PASSWORD = "{{ replication_user['pass'] }}",
-                    MASTER_PORT = 3306,
-                    MASTER_LOG_FILE = "$BINLOG_FILE",
-                    MASTER_LOG_POS = $BINLOG_POS;
-                START SLAVE;
-                SELECT "Replication started!";
-            EOF
-            `
-
-             echo "$QUERY" | tee /tmp/rpl_query
-
-             mysql < /tmp/rpl_query
-
-        - shell: /bin/bash
+        - enable: True
 
 {% endif %}
+
+
+{% if replication_config['enabled'] %}
+
+/etc/mysql/replication.sh:
+    file.managed:
+        - source: salt://mysql/files/replication.sh.j2
+        - template: jinja
+        - user: root
+        - group: root
+        - mode: 0750
+    
+    cmd.run:
+        - require:
+            - file: /etc/mysql/replication.sh 
+
+{% endif %}
+

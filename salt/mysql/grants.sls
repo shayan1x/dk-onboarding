@@ -1,5 +1,7 @@
 {% set conn = pillar['connection']  %}
-{% for user in pillar['users'] %}
+{% set mysql_auth = pillar['mysql_auth'] %}
+
+{% for user in pillar['mysql_users'] %}
 {{ user['name'] }}_user:
   {% if user['enable'] == True %}
   mysql_user.present:
@@ -9,21 +11,37 @@
     - name: "{{ user['name'] }}"
     - host: "{{ user['host'] }}"
     - password: "{{ user['pass'] }}"
-    - connection_host: {{ conn['host'] }}
-    - connection_user: {{ conn['user'] }}
-    - connection_pass: {{ conn['pass'] }}
-    - connection_port: {{ conn['port'] }}
+    - connection_host: "127.0.0.1"
+    - connection_user: root
+    - connection_pass: "{{ mysql_auth['root_password'] }}"
+    - connection_db: mysql
+    - auth_plugin: mysql_native_password
 
+{% endfor %}
 
-{% for grant in user['grants']  %}
-{{ user['name'] }}_grants_{{ grant['name'] }}:
+{% for role in pillar['mysql_roles'] %}
+
+{% set role_users = role['users'] %}
+{% set role_grants = role['grants'] %}
+
+{% for grant in role_grants %}
+{% for user in role_users %}
+
+set_roles_{{ grant['name'] }}_user_{{ user['name'] }}_{{ loop.index }}:
+  {% if grant['enable'] and user['enable'] %}
   mysql_grants.present:
-    - grant: {{ grant['grant'] }}
+  {% else %}
+  mysql_grants.absent:
+  {% endif %}
+    - name: "{{ grant['name'] }}"
+    - grant: "{{ grant['grant'] }}"
     - database: "{{ grant['database'] }}"
-    - grant_option: {{ grant['grants'] }}
     - user: "{{ user['name'] }}"
     - host: "{{ user['host'] }}"
-    - require:
-      - mysql_user: {{ user['name'] }}_user
+    - connection_host: "127.0.0.1"
+    - connection_user: root
+    - connection_pass: "{{ mysql_auth['root_password'] }}"
+
+{% endfor %}
 {% endfor %}
 {% endfor %}

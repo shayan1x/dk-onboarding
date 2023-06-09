@@ -1,0 +1,26 @@
+#!/bin/bash
+{% set repl_config = pillar['replication_config'] -%}
+{% set root_password = pillar['mysql_auth']['root_password'] %}
+{%- set backup_dir = pillar['restore_config']['local_directory'] -%}
+
+MASTER_HOST={{ repl_config['master_host'] }}
+MASTER_USER={{ repl_config['master_user'] }}
+MASTER_PORT={{ repl_config['master_port'] }}
+MASTER_PWD={{ repl_config['master_password'] }}
+BACKUP_DIR={{ backup_dir }}
+
+BINLOG_FILE=$(cat $BACKUP_DIR/xtrabackup_binlog_info | awk '{print $1}')
+BINLOG_POS=$(cat $BACKUP_DIR/xtrabackup_binlog_info | awk '{print $2}')
+
+cat <<EOF | mysql -uroot -p{{ root_password }}
+CHANGE MASTER TO
+MASTER_HOST="$MASTER_HOST",
+MASTER_USER="$MASTER_USER",
+MASTER_PORT=$MASTER_PORT,
+MASTER_PASSWORD="$MASTER_PWD",
+MASTER_LOG_FILE="$BINLOG_FILE",
+MASTER_LOG_POS=$BINLOG_POS;
+STOP SLAVE;
+RESET SLAVE;
+START SLAVE;
+EOF

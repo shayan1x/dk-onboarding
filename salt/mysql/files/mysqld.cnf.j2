@@ -1,36 +1,5 @@
-{% set common = pillar['commonConfig'] %}
-{% set master = pillar['masterConf'] %}
-{% set intermediate = pillar['intermediateConf'] %}
-{% set slave = pillar['slaveConf'] %}
-{% set hostname = grains['id'] %}
-{% set node = pillar['nodes_v2'] | selectattr('name', '==', hostname) | first %}
-
+{%- set mysql_config = pillar['mysql_config'].items() -%}
 [mysqld]
-# Configuration for master/intermediate/slave nodes
-server-id = {{ node['id'] }}
-{% for key, value in common.items() %}
-{{- key }} = {{ value }}
+{% for key, value in mysql_config -%}
+{{ key }} = {{ value }}
 {% endfor %}
-
-{%- if node['role'] == 'master' %}
-# Configuration for master node
-log-bin = {{ node['name'] }}
-{%- for key, value in master.items() %}
-{{ key }} = {{ value }}
-{%- endfor -%}
-{%- endif -%}
-
-{%- if node['role'] == 'intermediate' %}
-# Configuration for intermediate node
-log-bin = {{ node['name'] }}
-{%- for key, value in intermediate.items() %}
-{{ key }} = {{ value }}
-{%- endfor -%}
-{%- endif -%}
-
-{%- if node['role'] == 'slave' %}
-# Configuration for slave node
-{%- for key, value in slave.items() %}
-{{ key }} = {{ value }}
-{%- endfor -%}
-{%- endif -%}

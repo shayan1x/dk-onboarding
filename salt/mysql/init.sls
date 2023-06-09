@@ -1,3 +1,4 @@
 include:
     - mysql.install
-    - mysql.config
+    - mysql.restore
+    - mysql.backup
